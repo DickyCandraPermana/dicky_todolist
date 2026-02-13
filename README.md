@@ -85,3 +85,25 @@ Aplikasi akan berjalan di: https://localhost:5170
 Setelah aplikasi berjalan, buka browser dan akses:
 [`https://localhost:5170/swagger`](https://localhost:5170/swagger)
 untuk mencoba endpoint secara langsung.
+
+## Unit Test
+
+Unit test bisa dijalankan dengan mengakses ToDoList.Tests
+
+### 1. Akses Unit Test
+
+```bash
+cd ToDoList.Tests
+```
+
+### 2. Download Dependency
+
+```bash
+dotnet restore
+```
+
+### 3. Jalankan Unit Test
+
+```bash
+dotnet test
+```
