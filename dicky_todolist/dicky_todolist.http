@@ -5,20 +5,34 @@ Accept: application/json
 
 ###
 
-GET {{dicky_todolist_HostAddress}}/api/Todos
+GET {{dicky_todolist_HostAddress}}/api/Todos/{id}
 Accept: application/json
 
 ###
 
 POST {{dicky_todolist_HostAddress}}/api/Todos
 Accept: application/json
+{
+  "title": "Commanding heaven court",
+  "description": "Don't get killed."
+}
+###
+
+PUT {{dicky_todolist_HostAddress}}/api/Todos/{id}
+Accept: application/json
+{
+  "title": "Judul Baru",
+  "description": "Deskripsi Baru",
+  "isCompleted": true
+}
+###
+
+PUT {{dicky_todolist_HostAddress}}/api/Todos/{id}/complete
+Accept: application/json
 
 ###
 
-PUT {{dicky_todolist_HostAddress}}/api/Todos
-
-###
-
-DELETE {{dicky_todolist_HostAddress}}/api/Todos
+DELETE {{dicky_todolist_HostAddress}}/api/Todos/{id}
+Accept: application/json
 
 ###
