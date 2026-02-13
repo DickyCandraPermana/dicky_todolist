@@ -1,0 +1,24 @@
+@dicky_todolist_HostAddress = http://localhost:5170
+
+GET {{dicky_todolist_HostAddress}}/api/Todos
+Accept: application/json
+
+###
+
+GET {{dicky_todolist_HostAddress}}/api/Todos
+Accept: application/json
+
+###
+
+POST {{dicky_todolist_HostAddress}}/api/Todos
+Accept: application/json
+
+###
+
+PUT {{dicky_todolist_HostAddress}}/api/Todos
+
+###
+
+DELETE {{dicky_todolist_HostAddress}}/api/Todos
+
+###
