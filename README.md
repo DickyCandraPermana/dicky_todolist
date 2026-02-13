@@ -17,7 +17,7 @@ Proyek ini adalah REST API sederhana untuk mengelola **Todo List** yang dibangun
 ### 1. Clone Repository
 
 ```bash
-git clone [https://github.com/DickyCandraPermana/dicky_todolist.git](https://github.com/DickyCandraPermana/dicky_todolist.git)
+git clone https://github.com/DickyCandraPermana/dicky_todolist.git
 cd dicky_todolist
 ```
 
@@ -52,13 +52,14 @@ Aplikasi akan berjalan di: https://localhost:5170
 
 ## API Endpoints
 
-| Method     | Endpoints        | Deskripsi                       |
-| :--------- | :--------------- | :------------------------------ |
-| **GET**    | `api/todos`      | Mendapatkan semua daftar todo   |
-| **GET**    | `api/todos/{id}` | Mendapatkan todo berdasarkan ID |
-| **POST**   | `api/todos`      | Membuat todo baru               |
-| **PUT**    | `api/todos`      | Mengedit data todo              |
-| **DELETE** | `api/todos/{id}` | Menghapus todo berdasarkan ID   |
+| Method     | Endpoints                 | Deskripsi                            |
+| :--------- | :------------------------ | :----------------------------------- |
+| **GET**    | `api/todos`               | Mendapatkan semua daftar todo        |
+| **GET**    | `api/todos/{id}`          | Mendapatkan todo berdasarkan ID      |
+| **POST**   | `api/todos`               | Membuat todo baru                    |
+| **PUT**    | `api/todos/{id}`          | Mengedit data todo                   |
+| **PUT**    | `api/todos/{id}/complete` | Mengubah status todo menjadi selesai |
+| **DELETE** | `api/todos/{id}`          | Menghapus todo berdasarkan ID        |
 
 ### Contoh Request Body (Tambah Todo)
 

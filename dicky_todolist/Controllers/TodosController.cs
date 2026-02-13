@@ -83,6 +83,20 @@ namespace dicky_todolist.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/complete")]
+        public async Task<IActionResult> CompleteTodo(Guid id)
+        {
+            var todo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (todo == null) return NotFound();
+
+            todo.IsCompleted = true;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodo(Guid id)
         {
