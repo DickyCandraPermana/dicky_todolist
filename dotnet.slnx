@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="dicky_todolist/dicky_todolist.csproj" />
+  <Project Path="ToDoList.Tests/ToDoList.Tests.csproj" />
 </Solution>
