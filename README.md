@@ -100,7 +100,7 @@ cd ../ToDoList.Tests
 ### 2. Download Dependency
 
 ```bash
-dotnet restore ToDoList.Tests
+dotnet restore
 ```
 
 ### 3. Jalankan Unit Test
