@@ -26,7 +26,8 @@ cd dicky_todolist
 Jalankan perintah berikut untuk mengunduh library yang dibutuhkan:
 
 ```bash
-dotnet restore dicky_todolist
+cd dicky_todolist
+dotnet restore
 ```
 
 ### 3. Setup Database (Migration)
@@ -43,11 +44,10 @@ File todo.db akan terbuat secara otomatis di root folder.
 ### 4. Jalankan Aplikasi
 
 ```bash
-cd dicky_todolist
 dotnet run
 ```
 
-Aplikasi akan berjalan di: https://localhost:5170
+Aplikasi akan berjalan di: http://localhost:5170
 
 ---
 
@@ -93,8 +93,10 @@ Unit test bisa dijalankan dengan mengakses ToDoList.Tests
 
 ### 1. Akses Unit Test
 
+Jika berada di root project
+
 ```bash
-cd ../ToDoList.Tests
+cd ToDoList.Tests
 ```
 
 ### 2. Download Dependency
