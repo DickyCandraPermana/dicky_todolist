@@ -30,15 +30,15 @@ namespace dicky_todolist.Controllers
                 u.UpdatedAt,
                 u.DeletedAt
             ))
-            .Where(u => u.DeletedAt == null)
             .ToListAsync();
+
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id && u.DeletedAt != null);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null) return NotFound();
 
@@ -78,7 +78,7 @@ namespace dicky_todolist.Controllers
                 user.DeletedAt
             );
 
-            return Ok(response);
+            return CreatedAtAction(nameof(GetById), new { id = user.Id }, response);
         }
 
         [HttpPatch("{id}")]

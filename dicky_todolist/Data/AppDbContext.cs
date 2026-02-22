@@ -15,10 +15,13 @@ public class AppDbContext : DbContext
 
     // Menegaskan relasi One-to-Many
     modelBuilder.Entity<Todo>()
-        .HasOne(t => t.User)           // Todo punya satu User
-        .WithMany(u => u.Todos)        // User punya banyak Todos
-        .HasForeignKey(t => t.UserId)  // Key-nya adalah UserId
-        .OnDelete(DeleteBehavior.Cascade); // Jika User dihapus, semua Todo-nya ikut terhapus
+        .HasQueryFilter(t => t.DeletedAt == null)
+        .HasOne(t => t.User)
+        .WithMany(u => u.Todos)
+        .HasForeignKey(t => t.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
+    modelBuilder.Entity<User>()
+    .HasQueryFilter(u => u.DeletedAt == null);
   }
 
   public DbSet<Todo> Todos { get; set; }

@@ -10,7 +10,7 @@ namespace dicky_todolist.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodosController : ControllerBase
+    public class TodosController : BaseApiController
     {
         private readonly AppDbContext _context;
 
