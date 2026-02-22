@@ -5,6 +5,5 @@ namespace dicky_todolist.DTOs.Todo;
 public record class TodoCreateRequestDto
 (
   [Required] string Title,
-  string? Description,
-  [Required] Guid UserId
+  string? Description
 );

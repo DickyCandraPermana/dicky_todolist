@@ -10,8 +10,5 @@ public class TodoCreateRequestValidator : AbstractValidator<TodoCreateRequestDto
   {
     RuleFor(x => x.Title)
             .NotEmpty().WithMessage("Judul tidak boleh kosong");
-
-    RuleFor(x => x.UserId)
-        .NotEmpty().WithMessage("Error wak");
   }
 }
