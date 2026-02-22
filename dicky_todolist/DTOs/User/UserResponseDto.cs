@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace dicky_todolist.DTOs.User;
 
-public record class UserResponseDTO
+public record class UserResponseDto
 (
   [Required] Guid Id,
   string Username,

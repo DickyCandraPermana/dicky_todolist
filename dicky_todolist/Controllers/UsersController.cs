@@ -1,6 +1,8 @@
 using dicky_todolist.Data;
 using dicky_todolist.DTOs.User;
+using dicky_todolist.Exceptions;
 using dicky_todolist.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,17 +14,24 @@ namespace dicky_todolist.Controllers
     public class UsersController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IValidator<UserCreateRequestDto> _createValidator;
+        private readonly IValidator<UserUpdateRequestDto> _updateValidator;
 
-        public UsersController(AppDbContext context)
+        public UsersController(
+            AppDbContext context,
+            IValidator<UserCreateRequestDto> createValidator,
+            IValidator<UserUpdateRequestDto> updateValidator)
         {
             _context = context;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var users = await _context.Users
-            .Select(u => new UserResponseDTO(
+            .Select(u => new UserResponseDto(
                 u.Id,
                 u.Username,
                 u.Email,
@@ -38,23 +47,37 @@ namespace dicky_todolist.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new UserNotFoundException("Pengguna tidak ditemukan!");
 
-            if (user == null) return NotFound();
-
-            return Ok(new UserResponseDTO(
-                user.Id,
-                user.Username,
-                user.Email,
-                user.CreatedAt,
-                user.UpdatedAt,
-                user.DeletedAt
-            ));
+            return Ok(new UserResponseDto(
+                      user.Id,
+                      user.Username,
+                      user.Email,
+                      user.CreatedAt,
+                      user.UpdatedAt,
+                      user.DeletedAt
+                  ));
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserResponseDTO>> Store(UserCreateRequestDto request)
+        public async Task<ActionResult<UserResponseDto>> Store(UserCreateRequestDto request)
         {
+            var validationResult = await _createValidator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            if (await _context.Users.AnyAsync(u => u.Username == request.Username))
+            {
+                throw new BadHttpRequestException("Username sudah digunakan");
+            }
+
+            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+            {
+                throw new BadHttpRequestException("Email sudah digunakan");
+            }
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -68,7 +91,7 @@ namespace dicky_todolist.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var response = new UserResponseDTO
+            var response = new UserResponseDto
             (
                 user.Id,
                 user.Username,
@@ -82,11 +105,16 @@ namespace dicky_todolist.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<UserResponseDTO>> Update(UserUpdateRequestDto request, Guid id)
+        public async Task<ActionResult<UserResponseDto>> Update(UserUpdateRequestDto request, Guid id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var validationResult = await _updateValidator.ValidateAsync(request);
 
-            if (user == null) return NotFound();
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new UserNotFoundException("User tidak ditemukan");
 
             if (!string.IsNullOrWhiteSpace(request.Username)) user.Username = request.Username;
             if (!string.IsNullOrWhiteSpace(request.Email)) user.Email = request.Email;
@@ -97,7 +125,7 @@ namespace dicky_todolist.Controllers
 
             await _context.SaveChangesAsync();
 
-            var response = new UserResponseDTO(
+            var response = new UserResponseDto(
                 user.Id,
                 user.Username,
                 user.Email,
@@ -112,9 +140,7 @@ namespace dicky_todolist.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
-
-            if (user == null) return NotFound();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new UserNotFoundException("User tidak ditemukan");
 
             user.DeletedAt = DateTime.UtcNow;
 
