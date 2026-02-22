@@ -1,5 +1,6 @@
 using System;
 using FluentValidation;
+using dicky_todolist.Validators;
 using System.Net;
 using System.Text.Json;
 using dicky_todolist.DTOs;
@@ -8,6 +9,29 @@ namespace dicky_todolist.Middlewares;
 
 public class ExceptionMiddleware
 {
+  private readonly RequestDelegate _next;
+  private readonly ILogger<ExceptionMiddleware> _logger;
+  private readonly IHostEnvironment _env;
+
+  public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
+  {
+    _next = next;
+    _logger = logger;
+    _env = env;
+  }
+
+  public async Task InvokeAsync(HttpContext context)
+  {
+    try
+    {
+      await _next(context); // Lanjutkan request ke controller
+    }
+    catch (Exception ex)
+    {
+      _logger.LogError(ex, ex.Message); // Catat error di console/log
+      await HandleExceptionAsync(context, ex, _env);
+    }
+  }
   private async Task HandleExceptionAsync(HttpContext context, Exception exception, IHostEnvironment env)
   {
     context.Response.ContentType = "application/json";
