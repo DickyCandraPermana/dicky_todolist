@@ -1,17 +1,19 @@
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace dicky_todolist.Models;
 
-public class Todo
+public class User
 {
   [Required]
   public Guid Id { get; set; } = Guid.NewGuid();
-  public required string Title { get; set; }
-  public string Description { get; set; } = string.Empty;
-  public bool IsCompleted { get; set; } = false;
-  public Guid UserId { get; set; }
+  public required string Username { get; set; }
+  public required string Email { get; set; }
+  public required string Password { get; set; }
   public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
   public DateTime? DeletedAt { get; set; }
-  public User User { get; set; } = null!;
+
+  public ICollection<Todo> Todos { get; set; } = new List<Todo>();
 }

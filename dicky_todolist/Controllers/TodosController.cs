@@ -80,7 +80,7 @@ namespace dicky_todolist.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(todo);
         }
 
         [HttpPut("{id}/complete")]
@@ -94,7 +94,7 @@ namespace dicky_todolist.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(todo);
         }
 
         [HttpDelete("{id}")]
