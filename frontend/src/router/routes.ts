@@ -6,7 +6,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "Home",
     component: () => import("@/pages/HomePage.vue"),
-    meta: { requiresAuth: true }, // Sekarang rute ini terlindungi
   },
   {
     path: "/login",
