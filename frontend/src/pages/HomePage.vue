@@ -1,12 +1,6 @@
-<script setup lang="ts">
-import MainLayout from "@/layouts/MainLayout.vue";
-</script>
-
 <template>
-  <MainLayout>
-    <div class="flex flex-col w-full h-dvh justify-center items-center">
-      <h1 class="font-black text-5xl">Todo App</h1>
-      <p>Align your todo</p>
-    </div>
-  </MainLayout>
+  <section class="flex min-h-[60vh] flex-col items-center justify-center gap-2">
+    <h1 class="text-5xl font-black">Todo App</h1>
+    <p class="text-slate-600">Align your todo</p>
+  </section>
 </template>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import { Button } from "@/components/button";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -36,54 +38,51 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="login-container">
-    <form @submit.prevent="handleLogin" class="login-card">
-      <h1>Login</h1>
+  <div class="flex min-h-screen items-center justify-center px-4">
+    <form
+      @submit.prevent="handleLogin"
+      class="w-full max-w-md rounded-lg bg-slate-100 p-8 shadow"
+    >
+      <h1 class="mb-6 text-2xl font-bold text-slate-900">Login</h1>
 
-      <p v-if="error" class="error-message">{{ error }}</p>
+      <p v-if="error" class="mb-4 text-sm text-red-600">{{ error }}</p>
 
-      <div class="field">
-        <label>Email</label>
-        <input v-model="email" type="email" required />
+      <div class="mb-4">
+        <label class="mb-1 block text-sm font-medium text-slate-700"
+          >Email</label
+        >
+        <input
+          v-model="email"
+          type="email"
+          required
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
+        />
       </div>
 
-      <div class="field">
-        <label>Password</label>
-        <input v-model="password" type="password" required />
+      <div class="mb-6">
+        <label class="mb-1 block text-sm font-medium text-slate-700"
+          >Password</label
+        >
+        <input
+          v-model="password"
+          type="password"
+          required
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
+        />
       </div>
 
-      <button type="submit" :disabled="isLoading">
+      <Button type="submit" :disabled="isLoading" :loading="isLoading" block>
         {{ isLoading ? "Memproses..." : "Masuk" }}
-      </button>
+      </Button>
+
+      <p class="mt-4 text-center text-sm text-slate-600">
+        Belum punya akun?
+        <RouterLink
+          to="/register"
+          class="font-medium text-blue-600 hover:underline"
+          >Daftar</RouterLink
+        >
+      </p>
     </form>
   </div>
 </template>
-
-<style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login-card {
-  padding: 2rem;
-  border-radius: 8px;
-  background: #f4f4f4;
-  width: 100%;
-  max-width: 400px;
-}
-
-.field {
-  margin-bottom: 1rem;
-}
-.error-message {
-  color: red;
-  font-size: 0.9rem;
-}
-button {
-  width: 100%;
-  padding: 0.8rem;
-}
-</style>

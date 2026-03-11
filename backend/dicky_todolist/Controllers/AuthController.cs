@@ -4,6 +4,7 @@ using dicky_todolist.DTOs.User;
 using dicky_todolist.Exceptions;
 using dicky_todolist.Services;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,7 @@ namespace dicky_todolist.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequestDto request)
         {
             var validationResult = await _loginValidator.ValidateAsync(request);
@@ -63,6 +65,7 @@ namespace dicky_todolist.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(UserCreateRequestDto request)
         {
             var validationResult = await _createValidator.ValidateAsync(request);

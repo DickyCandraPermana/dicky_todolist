@@ -13,7 +13,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost5173", policy =>
     {
-        policy.WithOrigins("http://localhost:5173") // Asal request frontend Anda
+        policy.WithOrigins("http://localhost:5173", "http://localhost:8080") // Asal request frontend Anda
               .AllowAnyHeader()                     // Mengizinkan semua header
               .AllowAnyMethod()                     // Mengizinkan GET, POST, PUT, DELETE, dll
               .AllowCredentials();                  // Penting jika Anda menggunakan cookies/auth header
@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddControllers();
 
@@ -70,6 +70,21 @@ var jwtKey = builder.Configuration["Jwt:Key"];
 var issuer = builder.Configuration["Jwt:Issuer"];
 var audience = builder.Configuration["Jwt:Audience"];
 
+if (string.IsNullOrWhiteSpace(jwtKey))
+{
+    throw new InvalidOperationException("Jwt:Key is not configured.");
+}
+
+if (string.IsNullOrWhiteSpace(issuer))
+{
+    throw new InvalidOperationException("Jwt:Issuer is not configured.");
+}
+
+if (string.IsNullOrWhiteSpace(audience))
+{
+    throw new InvalidOperationException("Jwt:Audience is not configured.");
+}
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -98,6 +113,24 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+    for (var attempt = 1; attempt <= 10; attempt++)
+    {
+        try
+        {
+            await db.Database.EnsureCreatedAsync();
+            break;
+        }
+        catch when (attempt < 10)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3));
+        }
+    }
+}
 
 app.UseMiddleware<ExceptionMiddleware>();
 

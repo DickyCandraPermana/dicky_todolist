@@ -4,6 +4,7 @@ import type {
   LoginResponse,
   RegisterRequest,
 } from "@/types/auth";
+import type { User } from "@/types/user";
 
 export const AuthService = {
   async login(payload: LoginRequest): Promise<LoginResponse> {
@@ -15,8 +16,8 @@ export const AuthService = {
     await api.post("/api/Auth/register", payload);
   },
 
-  async getProfile(): Promise<any> {
-    const response = await api.get("/api/Auth/profile");
+  async getProfile(): Promise<User> {
+    const response = await api.post<User>("/api/Auth/profile");
     return response.data;
   },
 };

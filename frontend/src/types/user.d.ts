@@ -7,3 +7,9 @@ export interface User {
   updatedAt: string;
   deletedAt?: string | null;
 }
+
+export interface UpdateUserRequest {
+  username?: string;
+  email?: string;
+  password?: string;
+}
