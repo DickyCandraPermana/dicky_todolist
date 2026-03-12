@@ -8,5 +8,6 @@ public record class TodoResponseDto
   [Required] string Title,
   string Description,
   [Required] bool IsCompleted,
-  [Required] DateTime CreatedAt
+  [Required] DateTime CreatedAt,
+  DateTime? DueDate
 );

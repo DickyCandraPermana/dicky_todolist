@@ -1,31 +1,42 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { RouterLink, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 import { AuthService } from "@/services/AuthService";
 import { Button } from "@/components/button";
 
 const router = useRouter();
 
+// State form
 const username = ref("");
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
 const error = ref("");
+const success = ref("");
 
 const handleRegister = async () => {
   error.value = "";
+  success.value = "";
   isLoading.value = true;
 
   try {
+    // Memanggil AuthService untuk registrasi
     await AuthService.register({
       username: username.value,
       email: email.value,
       password: password.value,
     });
 
-    router.push("/login");
+    success.value = "Registrasi berhasil! Mengalihkan ke halaman login...";
+    
+    // Redirect ke login setelah delay singkat
+    setTimeout(() => {
+      router.push("/login");
+    }, 2000);
   } catch (err: any) {
-    error.value = err.response?.data?.message || "Registrasi gagal.";
+    // Menangkap error dari backend
+    error.value = err.response?.data?.message || "Registrasi gagal, silakan coba lagi.";
   } finally {
     isLoading.value = false;
   }
@@ -38,27 +49,23 @@ const handleRegister = async () => {
       @submit.prevent="handleRegister"
       class="w-full max-w-md rounded-lg bg-slate-100 p-8 shadow"
     >
-      <h1 class="mb-6 text-2xl font-bold text-slate-900">Register</h1>
+      <h1 class="mb-6 text-2xl font-bold text-slate-900">Daftar Akun</h1>
 
       <p v-if="error" class="mb-4 text-sm text-red-600">{{ error }}</p>
+      <p v-if="success" class="mb-4 text-sm text-green-600">{{ success }}</p>
 
       <div class="mb-4">
-        <label class="mb-1 block text-sm font-medium text-slate-700"
-          >Username</label
-        >
+        <label class="mb-1 block text-sm font-medium text-slate-700">Username</label>
         <input
           v-model="username"
           type="text"
-          minlength="3"
           required
           class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
         />
       </div>
 
       <div class="mb-4">
-        <label class="mb-1 block text-sm font-medium text-slate-700"
-          >Email</label
-        >
+        <label class="mb-1 block text-sm font-medium text-slate-700">Email</label>
         <input
           v-model="email"
           type="email"
@@ -68,13 +75,10 @@ const handleRegister = async () => {
       </div>
 
       <div class="mb-6">
-        <label class="mb-1 block text-sm font-medium text-slate-700"
-          >Password</label
-        >
+        <label class="mb-1 block text-sm font-medium text-slate-700">Password</label>
         <input
           v-model="password"
           type="password"
-          minlength="6"
           required
           class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
         />
@@ -89,7 +93,7 @@ const handleRegister = async () => {
         <RouterLink
           to="/login"
           class="font-medium text-blue-600 hover:underline"
-          >Masuk</RouterLink
+          >Masuk di sini</RouterLink
         >
       </p>
     </form>

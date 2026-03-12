@@ -37,7 +37,8 @@ namespace dicky_todolist.Controllers
                 t.Title,
                 t.Description,
                 t.IsCompleted,
-                t.CreatedAt))
+                t.CreatedAt,
+                t.DueDate))
             .ToListAsync();
 
             return Ok(todos);
@@ -52,7 +53,7 @@ namespace dicky_todolist.Controllers
 
             if (todo == null) throw new TodoNotFoundException("Todo tidak ditemukan");
 
-            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt));
+            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt, todo.DueDate));
         }
 
         [HttpPost]
@@ -72,13 +73,14 @@ namespace dicky_todolist.Controllers
                 Description = request.Description ?? "",
                 IsCompleted = false,
                 CreatedAt = DateTime.UtcNow,
-                UserId = GetUserId()
+                UserId = GetUserId(),
+                DueDate = request.DueDate
             };
 
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
 
-            var response = new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt);
+            var response = new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt, todo.DueDate);
 
             return CreatedAtAction(nameof(GetTodo), new { id = todo.Id }, response);
         }
@@ -99,6 +101,7 @@ namespace dicky_todolist.Controllers
 
             todo.Title = request.Title ?? todo.Title;
             todo.Description = request.Description ?? todo.Description;
+            todo.DueDate = request.DueDate;
             if (request.IsCompleted.HasValue)
             {
                 todo.IsCompleted = request.IsCompleted.Value;
@@ -107,7 +110,7 @@ namespace dicky_todolist.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt));
+            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt, todo.DueDate));
         }
 
         [HttpPatch("{id}/complete")]
@@ -122,7 +125,7 @@ namespace dicky_todolist.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt));
+            return Ok(new TodoResponseDto(todo.Id, todo.Title, todo.Description, todo.IsCompleted, todo.CreatedAt, todo.DueDate));
         }
 
         [HttpDelete("{id}")]

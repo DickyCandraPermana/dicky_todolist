@@ -7,6 +7,7 @@ export const useTodoStore = defineStore("todo", () => {
   const todos = ref<Todo[]>([]);
   const isLoading = ref(false);
   const error = ref<string>("");
+  const stats = ref<{ totalTasks: number; completedTasks: number; completedToday: number; pendingTasks: number } | null>(null);
 
   async function fetchTodos() {
     isLoading.value = true;
@@ -52,6 +53,16 @@ export const useTodoStore = defineStore("todo", () => {
     todos.value = todos.value.filter((todo) => todo.id !== id);
   }
 
+  async function fetchProductivity() {
+    return TodoService.getProductivity();
+  }
+
+  async function fetchStats() {
+    const data = await TodoService.getStats();
+    stats.value = data;
+    return data;
+  }
+
   return {
     todos,
     isLoading,
@@ -62,5 +73,8 @@ export const useTodoStore = defineStore("todo", () => {
     updateTodo,
     completeTodo,
     deleteTodo,
+    fetchProductivity,
+    fetchStats,
+    stats,
   };
 });

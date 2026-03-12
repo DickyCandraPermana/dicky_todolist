@@ -13,6 +13,7 @@ const isEditMode = computed(() => !!route.params.id);
 
 const title = ref("");
 const description = ref("");
+const dueDate = ref("");
 const isCompleted = ref(false);
 const isLoading = ref(false);
 const error = ref("");
@@ -25,9 +26,13 @@ onMounted(async () => {
 
   try {
     const todo = await todoStore.getTodoById(todoId.value);
-    title.value = todo.title;
-    description.value = todo.description;
+    title.value = todo.title || "";
+    description.value = todo.description || "";
     isCompleted.value = todo.isCompleted;
+    // Format YYYY-MM-DD for input type="date"
+    if (todo.dueDate) {
+      dueDate.value = new Date(todo.dueDate).toISOString().split("T")[0] || "";
+    }
   } catch (err: any) {
     error.value = err.response?.data?.message || "Gagal mengambil detail todo.";
   } finally {
@@ -45,11 +50,13 @@ const handleSubmit = async () => {
         title: title.value,
         description: description.value,
         isCompleted: isCompleted.value,
+        dueDate: dueDate.value || null,
       });
     } else {
       await todoStore.createTodo({
         title: title.value,
         description: description.value,
+        dueDate: dueDate.value || null,
       });
     }
 
@@ -93,6 +100,17 @@ const handleSubmit = async () => {
         <textarea
           v-model="description"
           rows="4"
+          class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label class="mb-1 block text-sm font-medium text-slate-700"
+          >Tenggat Waktu</label
+        >
+        <input
+          v-model="dueDate"
+          type="date"
           class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none ring-blue-500 transition focus:ring-2"
         />
       </div>
