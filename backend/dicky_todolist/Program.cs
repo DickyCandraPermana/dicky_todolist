@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
@@ -122,10 +124,10 @@ using (var scope = app.Services.CreateScope())
     {
         try
         {
-            await db.Database.EnsureCreatedAsync();
+            await db.Database.MigrateAsync();
             break;
         }
-        catch when (attempt < 10)
+        catch (Npgsql.NpgsqlException) when (attempt < 10)
         {
             await Task.Delay(TimeSpan.FromSeconds(3));
         }

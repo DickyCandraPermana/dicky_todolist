@@ -30,4 +30,14 @@ export const TodoService = {
   async remove(id: string): Promise<void> {
     await api.delete(`/api/Todos/${id}`);
   },
+  
+  async getProductivity(): Promise<{ date: string; count: number }[]> {
+    const response = await api.get<{ date: string; count: number }[]>("/api/Dashboard/productivity");
+    return response.data;
+  },
+
+  async getStats(): Promise<{ totalTasks: number; completedTasks: number; completedToday: number; pendingTasks: number }> {
+    const response = await api.get<{ totalTasks: number; completedTasks: number; completedToday: number; pendingTasks: number }>("/api/Dashboard/stats");
+    return response.data;
+  },
 };

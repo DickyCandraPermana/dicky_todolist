@@ -32,11 +32,13 @@ const handleDelete = async (id: string) => {
       {{ todoStore.error }}
     </p>
 
-    <div
-      v-if="todoStore.isLoading"
-      class="rounded-lg border border-slate-200 bg-white p-4 text-sm text-slate-600"
-    >
-      Memuat todo...
+    <!-- Skeleton Loading -->
+    <div v-if="todoStore.isLoading" class="space-y-3">
+      <div
+        v-for="i in 3"
+        :key="i"
+        class="h-24 animate-pulse rounded-lg border border-slate-200 bg-white"
+      ></div>
     </div>
 
     <div
