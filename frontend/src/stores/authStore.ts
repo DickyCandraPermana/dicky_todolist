@@ -26,7 +26,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       return data;
     } catch (error) {
-      logout(); // Pastikan bersih jika gagal
+      logout();
       throw error;
     }
   }
@@ -35,7 +35,6 @@ export const useAuthStore = defineStore("auth", () => {
     token.value = null;
     user.value = null;
     localStorage.removeItem("access_token");
-    // Opsional: Redirect ke login
     window.location.href = "/login";
   }
 
